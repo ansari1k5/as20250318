@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+            z-index: -1;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background-color: rgb(0, 207, 190);
+            border: 1px solid rgb(0, 207, 190);
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-input {
+            width: 50%;
+            padding: 10px;
+            background: rgba(89, 89, 89, 0.2);
+            border: none;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glass-input:focus {
+            box-shadow: 0 0 15px rgba(0, 207, 190, 0.8);
+        }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+
+<body>
+    <video autoplay loop muted class="video-bg">
+        <source src="/video/3578883-uhd_3840_2160_30fps (2).mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+
+    <div class="container text-center">
+        <h1>Hi, I'm AbduRehman.<br> What's your name?</h1>
+        <input type="text" id="nameInput" class="glass-input mt-3" placeholder="Enter your name"
+            oninput="validateInput()" onclick="resetButton()">
+        <button id="submitBtn" class="btn btn-primary mt-3" onclick="sendToWhatsApp()">Submit</button>
+    </div>
+
+    <script>
+     function sendToWhatsApp() {
+    let name = document.getElementById("nameInput").value.trim();
+    if (name === "") {
+        alert("Please enter your name!");
+        return;
+    }
+    let phoneNumber = "923251318530"; // Replace with your number
+    let message = `Hello! My name is ${name}.`;
+    let whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    window.location.href = whatsappURL; // Redirect directly to WhatsApp link
+}
+
+
+        function moveButton() {
+            let btn = document.getElementById("submitBtn");
+            let name = document.getElementById("nameInput").value.trim();
+
+            if (name === "") {
+                let randomX = (Math.random() * 500) - 500;
+                let randomY = (Math.random() * 500) - 500;
+                btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            }
+        }
+
+        function validateInput() {
+            let name = document.getElementById("nameInput").value.trim();
+            let btn = document.getElementById("submitBtn");
+
+            if (name !== "") {
+                btn.style.transform = "none";
+                btn.onmouseover = null; // Remove hover movement
+            } else {
+                btn.onmouseover = moveButton; // Enable hover movement
+            }
+        }
+
+        function resetButton() {
+            let btn = document.getElementById("submitBtn");
+            btn.style.transform = "none";
+        }
+
+        document.getElementById("submitBtn").onmouseover = moveButton;
+    </script>
+</body>
+
+</html>
