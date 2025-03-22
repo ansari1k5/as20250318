@@ -265,7 +265,8 @@ hr {
         align-items: center;
         height: 100%h;
         margin-top: 40%;
-        padding: 20px;
+        padding: 5px;
+        width: 100%;
 
     }
     hr {
@@ -283,7 +284,7 @@ hr {
         
     }
     header {
-        font-size: 2.5em;
+        font-size: 1.5em;
         font-weight: bold;
         cursor: pointer;
         text-align: center;
