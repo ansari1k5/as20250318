@@ -241,7 +241,7 @@ hr {
         color: #151515;
         text-decoration: none;
         align-items: center;
-        font-size: 20px;
+        font-size: 15px;
         font-weight: bold;
         text-align: center;
     }
@@ -264,7 +264,7 @@ hr {
         text-align: center;
         align-items: center;
         height: 100%h;
-        margin-top: 30%;
+        margin-top: 40%;
         padding: 20px;
 
     }
@@ -277,7 +277,7 @@ hr {
         padding: 10%;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 90%;
+        width: 95%;
         display: inline-block;
         display: grid
         
