@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You Are Being Watched</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: 'Courier New', monospace;
+      color: #00ffcc;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    #content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: left;
+    }
+    h1 {
+      color: #ff2e63;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #ff2e63aa;
+    }
+    .info-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid #66fcf1;
+      border-radius: 10px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 0 20px #66fcf144;
+    }
+    .info-line {
+      margin-bottom: 0.8rem;
+      white-space: pre-wrap;
+      opacity: 0;
+    }
+    #alertBox {
+      background: #ff2e63;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+      font-weight: bold;
+      animation: blink 1s infinite;
+      display: none;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div id="content">
+    <h1>You've Been Traced 👁️</h1>
+    <div class="info-box" id="infoBox">
+      <h2>Tracing in progress...</h2>
+    </div>
+    <div id="alertBox">WE ARE WATCHING YOU 👁️ STAY SAFE.</div>
+  </div>
+
+  <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
+  <script>
+    // MATRIX BACKGROUND
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    const katakana = "アカサタナハマヤラワ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff00";
+      ctx.font = fontSize + "px monospace";
+      drops.forEach((y, i) => {
+        const text = katakana.charAt(Math.floor(Math.random() * katakana.length));
+        const x = i * fontSize;
+        ctx.fillText(text, x, y * fontSize);
+        drops[i] = y * fontSize > canvas.height && Math.random() > 0.975 ? 0 : y + 1;
+      });
+    }
+    setInterval(drawMatrix, 50);
+
+    // TYPEWRITER EFFECT + USER INFO
+    async function getUserInfo() {
+      const res = await fetch("https://ipapi.co/json");
+      const data = await res.json();
+      const userData = [
+        `IP Address: ${data.ip}`,
+        `City: ${data.city}`,
+        `Region: ${data.region}`,
+        `Country: ${data.country_name}`,
+        `ISP: ${data.org}`,
+        `Latitude: ${data.latitude}`,
+        `Longitude: ${data.longitude}`,
+        `Browser: ${navigator.userAgent}`,
+        `Platform: ${navigator.platform}`,
+        `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`,
+        `Screen Resolution: ${window.screen.width} x ${window.screen.height}`
+      ];
+
+      const box = document.getElementById("infoBox");
+      box.innerHTML = "";
+      for (let i = 0; i < userData.length; i++) {
+        const line = document.createElement("div");
+        line.className = "info-line";
+        box.appendChild(line);
+        await typeWriter(line, userData[i], 30);
+        line.style.opacity = 1;
+      }
+
+      setTimeout(() => {
+        const beep = document.getElementById("beep");
+        beep.play();
+        document.getElementById("alertBox").style.display = "block";
+        alert("Warning: Your location has been logged. You are being monitored. 👁️");
+      }, 1000);
+    }
+
+    async function typeWriter(element, text, speed) {
+      return new Promise(resolve => {
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+          } else {
+            clearInterval(interval);
+            resolve();
+          }
+        }, speed);
+      });
+    }
+
+    getUserInfo();
+  </script>
+</body>
+</html>
